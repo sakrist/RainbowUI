@@ -8,7 +8,7 @@ import SwiftUI
 
 public struct RainbowButtonStyle: ButtonStyle {
     @State private var angle: Double = 0
-    
+    @State private var timer: Timer?
     public init() {}
     
     let rainbowColors: [Color] = [.red, .orange, .yellow, .green, .blue, .purple, .red]
@@ -29,7 +29,11 @@ public struct RainbowButtonStyle: ButtonStyle {
                         )
                     
                     RoundedRectangle(cornerRadius: 10)
+                    #if os(iOS)
                         .fill(Color(.systemBackground))
+                    #elseif os(macOS)
+                        .fill(Color(.windowBackgroundColor))
+                    #endif
                         .padding(2)
                 }
             )
@@ -45,7 +49,6 @@ public struct RainbowButtonStyle: ButtonStyle {
                         lineWidth: 2
                     )
             )
-            // Multiple layered shadows with different colors and offsets
             .shadow(
                 color: Color.purple.opacity(0.5), // Single glowing shadow
                 radius: 10,
@@ -55,11 +58,18 @@ public struct RainbowButtonStyle: ButtonStyle {
             .scaleEffect(configuration.isPressed ? 0.95 : 1)
             .animation(.spring(), value: configuration.isPressed)
             .onAppear {
-                withAnimation(.linear(duration: 3)
-                    .repeatForever(autoreverses: false)) {
-                    angle = 360
+                // Start the timer to rotate the angle continuously
+                timer = Timer.scheduledTimer(withTimeInterval: 0.01667, repeats: true) { _ in
+                    DispatchQueue.main.async {
+                        angle = (angle + 2).truncatingRemainder(dividingBy: 360)
+                    }
                 }
             }
+            .onDisappear {
+                // Invalidate the timer when the button disappears
+                timer?.invalidate()
+            }
+            
     }
 }
 
