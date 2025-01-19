@@ -9,6 +9,8 @@ import SwiftUI
 public struct RainbowButtonStyle: ButtonStyle {
     @State private var angle: Double = 0
     
+    public init() {}
+    
     let rainbowColors: [Color] = [.red, .orange, .yellow, .green, .blue, .purple, .red]
     
     public func makeBody(configuration: Configuration) -> some View {
