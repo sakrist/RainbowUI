@@ -6,12 +6,12 @@
 
 import SwiftUI
 
-struct RainbowButtonStyle: ButtonStyle {
+public struct RainbowButtonStyle: ButtonStyle {
     @State private var angle: Double = 0
     
     let rainbowColors: [Color] = [.red, .orange, .yellow, .green, .blue, .purple, .red]
     
-    func makeBody(configuration: Configuration) -> some View {
+    public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding(.horizontal, 20)
             .padding(.vertical, 10)
