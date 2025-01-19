@@ -15,3 +15,6 @@ Button("Rainbow Button") {
 .buttonStyle(RainbowButtonStyle())
 ```
 
+### Preview
+
+![Rainbow Button SwiftUI](sample_video.gif)
