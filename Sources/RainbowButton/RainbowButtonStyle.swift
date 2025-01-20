@@ -6,9 +6,29 @@
 
 import SwiftUI
 
+
+struct RotatingEffect: ViewModifier {
+    @Binding var angle: Double
+    let duration: Double
+
+    func body(content: Content) -> some View {
+        content
+            .onAppear {
+                withAnimation(.linear(duration: duration).repeatForever(autoreverses: false)) {
+                    angle = 360
+                }
+            }
+    }
+}
+
+extension View {
+    func rotatingEffect(angle: Binding<Double>, duration: Double) -> some View {
+        self.modifier(RotatingEffect(angle: angle, duration: duration))
+    }
+}
+
 public struct RainbowButtonStyle: ButtonStyle {
     @State private var angle: Double = 0
-    @State private var timer: Timer?
     public init() {}
     
     let rainbowColors: [Color] = [.red, .orange, .yellow, .green, .blue, .purple, .red]
@@ -57,18 +77,7 @@ public struct RainbowButtonStyle: ButtonStyle {
             )
             .scaleEffect(configuration.isPressed ? 0.95 : 1)
             .animation(.spring(), value: configuration.isPressed)
-            .onAppear {
-                // Start the timer to rotate the angle continuously
-                timer = Timer.scheduledTimer(withTimeInterval: 0.01667, repeats: true) { _ in
-                    DispatchQueue.main.async {
-                        angle = (angle + 2).truncatingRemainder(dividingBy: 360)
-                    }
-                }
-            }
-            .onDisappear {
-                // Invalidate the timer when the button disappears
-                timer?.invalidate()
-            }
+            .rotatingEffect(angle: $angle, duration: 3)
             
     }
 }
