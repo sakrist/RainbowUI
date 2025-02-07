@@ -6,30 +6,12 @@
 
 import SwiftUI
 
-
-struct RotatingEffect: ViewModifier {
-    @Binding var angle: Double
-    let duration: Double
-
-    func body(content: Content) -> some View {
-        content
-            .onAppear {
-                withAnimation(.linear(duration: duration).repeatForever(autoreverses: false)) {
-                    angle = 360
-                }
-            }
-    }
-}
-
-extension View {
-    func rotatingEffect(angle: Binding<Double>, duration: Double) -> some View {
-        self.modifier(RotatingEffect(angle: angle, duration: duration))
-    }
-}
-
 public struct RainbowButtonStyle: ButtonStyle {
     @State private var angle: Double = 0
+    let startDate = Date()
     public init() {}
+    
+    let shaderlibrary = ShaderLibrary.bundle(Bundle.module)
     
     let rainbowColors: [Color] = [.red, .orange, .yellow, .green, .blue, .purple, .red]
     
@@ -39,14 +21,13 @@ public struct RainbowButtonStyle: ButtonStyle {
             .padding(.vertical, 10)
             .background(
                 ZStack {
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(
-                            AngularGradient(
-                                gradient: Gradient(colors: rainbowColors),
-                                center: .center,
-                                angle: .degrees(angle)
-                            )
-                        )
+                    TimelineView(.animation) { context in
+                        Rectangle()
+                            .visualEffect { content, proxy in
+                                content.layerEffect(shaderlibrary.rainbowCircle(.float(startDate.timeIntervalSinceNow), .float2(proxy.size)), maxSampleOffset: .zero)
+                            }
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
                     
                     RoundedRectangle(cornerRadius: 10)
                     #if os(iOS)
@@ -58,17 +39,6 @@ public struct RainbowButtonStyle: ButtonStyle {
                 }
             )
             .foregroundColor(.primary)
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(
-                        AngularGradient(
-                            gradient: Gradient(colors: rainbowColors),
-                            center: .center,
-                            angle: .degrees(angle)
-                        ),
-                        lineWidth: 2
-                    )
-            )
             .shadow(
                 color: Color.purple.opacity(0.5), // Single glowing shadow
                 radius: 10,
@@ -77,7 +47,6 @@ public struct RainbowButtonStyle: ButtonStyle {
             )
             .scaleEffect(configuration.isPressed ? 0.95 : 1)
             .animation(.spring(), value: configuration.isPressed)
-            .rotatingEffect(angle: $angle, duration: 3)
             
     }
 }
@@ -88,6 +57,17 @@ public struct RainbowButtonStyle: ButtonStyle {
     ZStack {
         Button("Rainbow Button") {
             print("Button tapped!")
+            guard let device = try? MTLCreateSystemDefaultDevice() else {
+                fatalError("Unable to create default device")
+            }
+            guard let library = try? device.makeDefaultLibrary(bundle: Bundle.module)
+                  else { fatalError("Unable to create default library") }
+            
+            let library2 = ShaderLibrary.bundle(Bundle.module)
+                  
+            print(library)
+            
+            print(library2.rainbow)
         }
         .font(.title)
         .buttonStyle(RainbowButtonStyle())

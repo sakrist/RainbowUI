@@ -7,6 +7,8 @@ The gradient continuously animates in a circular motion, creating a glowing effe
 ### Code Example
 
 ```swift
+import RainbowUI
+
 // Rainbow button
 Button("Rainbow Button") {
     print("Button tapped!")
@@ -15,6 +17,3 @@ Button("Rainbow Button") {
 .buttonStyle(RainbowButtonStyle())
 ```
 
-### Preview
-
-![Rainbow Button SwiftUI](sample_video.gif)
