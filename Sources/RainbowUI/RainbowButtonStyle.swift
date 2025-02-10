@@ -7,13 +7,10 @@
 import SwiftUI
 
 public struct RainbowButtonStyle: ButtonStyle {
-    @State private var angle: Double = 0
     let startDate = Date()
     public init() {}
     
     let shaderlibrary = ShaderLibrary.bundle(Bundle.module)
-    
-    let rainbowColors: [Color] = [.red, .orange, .yellow, .green, .blue, .purple, .red]
     
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
