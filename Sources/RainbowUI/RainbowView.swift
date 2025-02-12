@@ -48,6 +48,9 @@ internal struct RainbowView<Content>: View where Content: View {
         return min(proxy.frame(in: .global).width / 2, proxy.frame(in: .global).height / 2)
     }
     
+    func bezierBlend(_ t:Double) -> Double {
+        return t * t * (3.0 - 2.0 * t)
+    }
     
     var body: some View {
                     
@@ -57,10 +60,12 @@ internal struct RainbowView<Content>: View where Content: View {
                 TimelineView(.animation) { context in
                     ZStack {
                         let time = context.date.timeIntervalSinceReferenceDate
-                        let cycleTime = 3.5
+                        let cycleTime = 4.0
                         let x = time.truncatingRemainder(dividingBy: cycleTime)
-                        let speed = 300.0
-                        let offx = -((x < cycleTime/2.0) ? (x * speed) : ((cycleTime - x) * speed) ) - 100
+                        let a = bezierBlend(x / cycleTime)
+                        
+                        let speed = 1000.0
+                        let offx = -((a < 0.5) ? (a * speed) : ((1.0 - a) * speed))
 
                         RadialGradient(
                             gradient: self.surface,
@@ -68,7 +73,7 @@ internal struct RainbowView<Content>: View where Content: View {
                             startRadius: 0.3,
                             endRadius: self.radius(proxy))
                         .scaleEffect(self.scale(proxy))
-                        .offset(.init(width: offx, height: 0))
+                        .offset(.init(width: offx, height: offx))
                     }
                 }
                 .mask(self.content)
@@ -79,7 +84,7 @@ internal struct RainbowView<Content>: View where Content: View {
 
 #Preview {
     Rectangle()
-        .frame(width: 200, height: 50)
+        .frame(width: 300, height: 50)
         .rainbowRun()
     
     Text("Hello, rainbow run! ✨").rainbowRun()

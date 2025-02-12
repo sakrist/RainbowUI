@@ -11,9 +11,9 @@ public extension Gradient {
     static var rainbow: Gradient {
         Gradient(colors: [
             .red,
-            .red, .orange, .yellow, .green, .blue, .purple, .pink,
-            .red, .orange, .yellow, .green, .blue, .purple, .pink,
-            .red, .orange, .yellow, .green, .blue, .purple, .pink
+            .red, .orange, .yellow, .green, .blue, .blue, .purple, .purple, .pink, .red,
+            .red, .orange, .yellow, .green, .blue, .blue, .purple, .purple, .pink, .red,
+            .red, .orange, .yellow, .green, .blue, .blue, .purple, .purple, .pink, .red,
         ])
     }
 }
