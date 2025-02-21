@@ -10,18 +10,17 @@ public struct RainbowButtonStyle: ButtonStyle {
     let startDate = Date()
     public init() {}
     
-    let shaderlibrary = ShaderLibrary.bundle(Bundle.module)
+    private let shaderlibrary = ShaderLibrary.bundle(Bundle.module)
     
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .padding(.horizontal, 20)
-            .padding(.vertical, 10)
             .background(
                 ZStack {
                     TimelineView(.animation) { context in
                         Rectangle()
                             .visualEffect { content, proxy in
-                                content.layerEffect(shaderlibrary.rainbowCircle(.float(startDate.timeIntervalSinceNow), .float2(proxy.size)), maxSampleOffset: .zero)
+                                content.layerEffect(shaderlibrary.rainbowCircle(.float(startDate.timeIntervalSinceNow), .float2(proxy.size)),
+                                                    maxSampleOffset: .zero)
                             }
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
@@ -52,7 +51,7 @@ public struct RainbowButtonStyle: ButtonStyle {
 
 #Preview {
     ZStack {
-        Button("Rainbow Button") {
+        Button {
             print("Button tapped!")
             guard let device = try? MTLCreateSystemDefaultDevice() else {
                 fatalError("Unable to create default device")
@@ -65,9 +64,14 @@ public struct RainbowButtonStyle: ButtonStyle {
             print(library)
             
             print(library2.rainbow)
+        } label: {
+            Text("Rainbow Button")
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
         }
         .font(.title)
         .buttonStyle(RainbowButtonStyle())
+//        .rainbowBorder()
     }
 }
 

@@ -17,3 +17,11 @@ public extension Gradient {
         ])
     }
 }
+
+
+#Preview {
+    LinearGradient(gradient: .rainbow, startPoint: .top, endPoint: .bottom)
+        .frame(width: 200, height: 200)
+        .scaleEffect(3)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+}
