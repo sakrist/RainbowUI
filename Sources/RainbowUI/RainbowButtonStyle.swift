@@ -25,7 +25,7 @@ public struct RainbowButtonStyle: ButtonStyle {
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
                     
-                    RoundedRectangle(cornerRadius: 10)
+                    RoundedRectangle(cornerRadius: 8)
                     #if os(iOS)
                         .fill(Color(.systemBackground))
                     #elseif os(macOS)

@@ -40,7 +40,7 @@ internal struct RainbowBorderModifier: ViewModifier {
 }
 
 extension View {
-    func rainbowBorder(cornerRadius: CGFloat = 12, borderWidth: CGFloat = 2) -> some View {
+    func rainbowBorder(cornerRadius: CGFloat = 10, borderWidth: CGFloat = 2) -> some View {
         self.modifier(RainbowBorderModifier(cornerRadius: cornerRadius, borderWidth: borderWidth))
     }
 }
